@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <form action="" method="post">
+        <p>
+            {{ form.characterName.label }}
+            {{ form.characterName(size=30) }}<br>
+
+            {% for item in form.characterClass %}
+            <tr>
+                <td>{{ item }}</td>
+                <td>{{ item.label }}</td>
+            </tr>
+            {% endfor %} <br>
+
+            {{ form.createCharacter() }}
+        </p>
+       
+       
+    </form>
+{% endblock %}
+          
+
+
