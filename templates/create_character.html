@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
-{% block content %}
 
+
+{% block content %}
+<script src="static/search.js"></script>
     <form action="" method="post">
         <p>
             {{ form.characterName.label }}
@@ -16,9 +18,16 @@
 
             {{ form.createCharacter() }}
         </p>
-       
-       
     </form>
+
+    <br><br>
+
+    <p>
+        Search character: <input id="searchChar">
+        <button id="searchCharBtn">Search</button>
+        
+    </p>
+
 {% endblock %}
           
 
