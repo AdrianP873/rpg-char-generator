@@ -5,9 +5,10 @@ $("document").ready(function() {
             url: "/search",
             type: 'POST',
             contentType: "application/json",
-            data: JSON.stringify({'query': query})
-        }).done(function(data) {
-            console.log(data);
+            data: JSON.stringify({'query': query}),
+            success: function(response) {
+                document.write(response);
+            }
         });
     });
 });
