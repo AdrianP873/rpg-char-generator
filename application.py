@@ -1,11 +1,14 @@
 import flask
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect, url_for, flash
 from forms import SignUpForm, CreateCharacterForm, LoginForm
 import sqlite3
 import requests
 
 application = flask.Flask(__name__)
 application.config['SECRET_KEY'] = 'mySecretKey'
+
+# =======================================================
+# === Config Functions === #
 
 # Function to convert database cursor objects into a dictionary
 def dict_factory(cursor, row):
@@ -22,21 +25,24 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+# ======================================================= 
 
-# Landing page - login
-@application.route('/', methods=['GET'])
+# Landing page - login to account to use rpg character generator
+@application.route('/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.is_submitted():
-        data = form.request
-        return render_template('login.html', data=data)
-    return render_template('login.html', form=form)
+    if form.validate_on_submit():
+        flash('Login requests for user {}, remember_me=[]'.format(
+            form.username.data, form.remember_me.data
+        ))
+        return redirect('/create')
+    return render_template('login.html', form=form, title="Sign In")
 
+# =======================================================
 
 # Create a character and store it in the database
 @application.route('/create', methods=['GET', 'POST'])
-def home():
-    
+def createCharacter():
     # Instantiate form
     form = CreateCharacterForm()
 
@@ -57,7 +63,6 @@ def home():
         resultList.append(vocation.get('endurance'))
         resultList.append(vocation.get('strength'))
         resultList.append(vocation.get('intelligence'))
-        print(resultList)
 
         conn = sqlite3.connect('rpg.db')
         conn.row_factory = dict_factory
@@ -67,43 +72,41 @@ def home():
         conn.close()
 
         return render_template('character.html', result=result, vocation=vocation)
-    return render_template('create_character.html', name='Adrian', form=form)
+    return render_template('create_character.html', name='Adrian', form=form, title="Create Character")
 
+# =======================================================
 
 # Search for a character in the database
 @application.route('/search', methods=['GET','POST'])
 def searchCharacter():
-
     if request.method == 'POST':
         data = request.get_json()
         character = data.get('query')
     
-        resList = [character]
+        queryList = [character]
 
         conn = sqlite3.connect('rpg.db')
         conn.row_factory = dict_factory
         cur =  conn.cursor()
     
-        char = cur.execute('SELECT * FROM Characters WHERE Name = ? ;', resList).fetchone()
+        char = cur.execute('SELECT * FROM Characters WHERE Name = ? ;', queryList).fetchone()
 
         if char != None:
-            return render_template('character.html', char=char)
+            return render_template('character.html', char=char, title=char.get('Name'))
         else:
             return "That character does not exist"
-    return render_template('search.html')
-
-
-
-
+    return render_template('search.html', title="Search Character")
 
 # =======================================================
 
+# Sign up for an account
 @application.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignUpForm()
     if form.is_submitted():
         result = request.form
-        return render_template('user.html', result=result)
+        email = result.get('email')
+        return render_template('login.html', res=result)
     return render_template('signup.html', form=form)
 
-application.run(debug=False)
+application.run(debug=True)
