@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="" method="post">
+        <p>
+            {{ form.username.label }}: <br>
+            {{ form.username(size=30) }}
+            {% for error in form.username.error %}
+            <span style="color: red; font-style: italic;">{{ error }}</span>
+            {% endfor %}
+            
+        </p>
+        <p>
+            {{ form.password.label }}: <br>
+            {{ form.password(size=30) }}
+            {% for error in form.password.errors %}
+            <span style="color: red; font-style: italic">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.email.label }}: <br>
+            {{ form.email }}
+        </p>
+        <p>
+            {{ form.submit()}}
+        </p>
+    </form>
+{% endblock %}
