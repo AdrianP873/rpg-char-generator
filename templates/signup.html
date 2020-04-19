@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-    <h2>Sign Up</h2>
     <form action="" method="post">
         <p>
             {{form.username.label}} <br>
@@ -11,6 +9,10 @@
         <p>
             {{form.password.label}} <br>
             {{form.password(size=30)}}
+        </p>
+        <p>
+            {{ form.email.label }} <br>
+            {{ form.email }}
         </p>
         <p>
             {{form.submit()}}
