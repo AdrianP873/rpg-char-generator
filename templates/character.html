@@ -2,6 +2,7 @@
 
 {% block content %}
 
+    <!-- returned when character created -->
     {% if result is defined %}
         Name: {{ result.characterName}} <br>
         Vocation: {{ result.characterClass }} <br>
@@ -11,21 +12,43 @@
         Intelligence: {{ vocation.intelligence }} <br>
     {% endif %}
 
+    <!-- returned when character is searched -->
     {% if char is defined %}
-        Name: {{ char.Name }} <br>
-        Level: {{ char.Level }} <br>
-        Vigor: {{ char.Vigor }} <br>
-        Endurance: {{ char.Endurance }} <br>
-        Strength:{{ char.Strength }} <br>
-        Intelligence: {{ char.Intelligence }}
+    <div class="charTable">
+    <table>
+        <tr>
+            <th>Character Information</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{ char.Name }}</td>
+        </tr>
+        <tr>
+            <td>Vocation</td>
+            <td>{{ char.Vocation }}</td>
+        </tr>
+        <tr>
+            <td>Level</td>
+            <td>{{ char.Level }}</td>
+        </tr>
+        <tr>
+            <td>Vigor</td>
+            <td>{{ char.Vigor }}</td>
+        </tr>
+        <tr>
+            <td>Endurance</td>
+            <td>{{ char.Endurance }}</td>
+        </tr>
+        <tr>
+            <td>Strength</td>
+            <td>{{ char.Strength }}</td>
+        </tr>
+        <tr>
+            <td>Intelligence</td>
+            <td>{{ char.Intelligence }}</td>
+        </tr>
+    </table>
+    </div>
     {% endif %}
-
-
-
-   
-
-   
-
-
-
 {% endblock %}

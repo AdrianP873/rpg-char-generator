@@ -1,10 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, RadioField, BooleanField
+from wtforms.validators import DataRequired
 
 class SignUpForm(FlaskForm):
-    username = StringField('Username')
-    password = PasswordField('Password')
-    email = StringField('Email')
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
     submit = SubmitField('Sign up')
 
 class CreateCharacterForm(FlaskForm):
@@ -14,5 +15,7 @@ class CreateCharacterForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username')
-    password = PasswordField('Password')
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField("Login")

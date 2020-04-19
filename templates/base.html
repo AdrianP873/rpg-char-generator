@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title> Welcome</title>
+    {% if title %}
+    <title>{{ title }} | rpg-generator</title>
+    {% else %}
+    <title>rpg-generator</title>
+    {% endif %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="static/styles.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"></script>
-   
+
 
 </head>
     <body>
         <!--Create the side nav bar -->
         <div class="sidenav">
-            <a href="/">Login</a>
-            <a href="/signup">Sign Up</a>
-            <a href="/search">Search</a>
+            <a href={{ url_for('login') }}>Login</a>
+            <a href={{ url_for('signup') }}>Sign Up</a>
+            
+            <a href={{ url_for('searchCharacter') }}>Search</a>
             <a href="/create">Create</a>
         </div>
 
         <div class="main">
             <h1> Welcome to the rpg char generator</h1>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+            
             {% block content %}
             <!-- Page content goes here -->
             {% endblock %}

@@ -39,12 +39,12 @@ body {
 
 }
 
-table {
+.createCharTable table {
     border: 1px solid black; 
     background-color: #eee; 
 }
 
-th {
+.createCharTable th {
     border: 1px solid white; 
     padding-right: 120px;
     text-align: left;
@@ -52,13 +52,50 @@ th {
     
 }
 
-td {
-      
+.createCharTable td {
     padding-right: 120px;
-    border-right: 1px solid white;
-    border-top: 1px solid white;
+
+}
+
+.charTable table {
     
+    table-layout: fixed;
+    text-align: left;
+    border-collapse: collapse;
+    color:black;
+    border: 1px solid black;
+ 
+
+}
+
+.charTable tr {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+
+.charTable tr:nth-child(odd) {
+    background-color: #eee;
     
 }
 
+.charTable th {
+    color: white;
+    background-color: #336699;
+  
+   
+    
+}
+
+.charTable td {
+    
+    border-right: 1px solid black;
+    width: 220px;
+}
+.charTable td:nth-child(2) {
+    width: 360px;
+}
+
+
+   
 
