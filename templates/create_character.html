@@ -1,24 +1,29 @@
 {% extends "base.html" %}
 
+
+
 {% block content %}
-
     <form action="" method="post">
-        <p>
-            {{ form.characterName.label }}
-            {{ form.characterName(size=30) }}<br>
-
-            {% for item in form.characterClass %}
-            <tr>
-                <td>{{ item }}</td>
-                <td>{{ item.label }}</td>
-            </tr>
-            {% endfor %} <br>
-
-            {{ form.createCharacter() }}
-        </p>
-       
-       
+    <table class="charTable"">
+        <tr>
+            <th>Name</th>
+            <th>Vocation</th>
+        </tr>
+        <tr>
+            <td>{{ form.characterName(size=30) }}</td>
+            <td>
+                {% for item in form.characterClass %} 
+                    {{ item.label }} {{ item }}
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+    {{ form.createCharacter() }}
     </form>
+    <br><br>
+
+
+
 {% endblock %}
           
 

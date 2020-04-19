@@ -1,16 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title> Welcome</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/styles.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"></script>
+   
+
 </head>
     <body>
-        <div id="navbar">
-            <h2>My Blog | Test</a></h2>
+        <!--Create the side nav bar -->
+        <div class="sidenav">
+            <a href="/">Login</a>
+            <a href="/signup">Sign Up</a>
+            <a href="/search">Search</a>
+            <a href="/create">Create</a>
         </div>
 
-        {% block content %}
+        <div class="main">
+            <h1> Welcome to the rpg char generator</h1>
+            {% block content %}
+            <!-- Page content goes here -->
+            {% endblock %}
+        </div>
 
-        {% endblock %}
+
 
 
     </body>
