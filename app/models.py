@@ -37,7 +37,7 @@ class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
     vocation = db.Column(db.String(32))
-    level = db.Column(db.Integer, index=True)
+    level = db.Column(db.Integer, index=True, default=1)
     created_at = db.Column(db.DateTime, default=datetime.now)
     vigor = db.Column(db.Integer)
     endurance = db.Column(db.Integer)

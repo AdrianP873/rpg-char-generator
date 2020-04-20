@@ -16,3 +16,4 @@ class Config(object):
     # Track modifications signals application everytime change is about to be made to DB
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
+    
