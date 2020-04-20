@@ -28,10 +28,23 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+# Landing page - login to account to use rpg character generator
+@app.route('/')
+def home():
+    if current_user.is_anonymous:
+        return redirect(url_for('login'))
+    else:
+        chars = Character.query.filter_by(owner=current_user).first()
+        if chars is not None:
+            chars = Character.query.filter_by(owner=current_user)
+            return render_template('home.html', title='Home', chars=chars)
+        return render_template('home.html', title='Home')
+
+
 # ======================================================= 
 
-# Landing page - login to account to use rpg character generator
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     # If user already logged in, redirect them to create character
     if current_user.is_authenticated:
@@ -50,7 +63,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('createCharacter')
+            next_page = url_for('home')
         return redirect(next_page)
     return render_template('login.html', form=form, title="Sign In")
 
@@ -84,34 +97,26 @@ def signup():
 @login_required
 def createCharacter():
     # Instantiate form
+    
     form = CreateCharacterForm()
-
-    # Get form data and pass it to template for rendering
     if form.is_submitted():
-        result = request.form
-        if result.get('characterClass') == 'Knight':
-            vocation = {'class':'knight', 'level':1, 'vigor': 12, 'endurance':11,'strength':13, 'intelligence':9}
+        char = Character(name=form.characterName.data, vocation=form.characterClass.data, owner=current_user)
+        db.session.add(char)
+  
+        if form.characterClass.data == 'Knight':
+            char.vigor = 12
+            char.endurance = 11
+            char.strength = 13
+            char.intelligence = 9
         else:
-            vocation = {'class':'sorcerer', 'level':1, 'vigor': 6, 'endurance':9, 'strength':7, 'intelligence':16}
+            char.vigor =6
+            char.endurance = 9
+            char.strength = 7
+            char.intelligence = 16
+
+        db.session.commit()
         
-        # Add character data into database ||| to be completed after GET character
-        resultList = []
-        resultList.append(result.get('characterName'))
-        resultList.append(result.get('characterClass'))
-        resultList.append(vocation.get('level'))
-        resultList.append(vocation.get('vigor'))
-        resultList.append(vocation.get('endurance'))
-        resultList.append(vocation.get('strength'))
-        resultList.append(vocation.get('intelligence'))
-
-        conn = sqlite3.connect('rpg.db')
-        conn.row_factory = dict_factory
-        cur = conn.cursor()
-        cur.execute('INSERT INTO Characters VALUES (?,?,?,?,?,?,?)', resultList)
-        conn.commit()
-        conn.close()
-
-        return render_template('character.html', result=result, vocation=vocation)
+        return render_template('character.html', character=form)
     return render_template('create_character.html', name='Adrian', form=form, title="Create Character")
 
 # =======================================================
@@ -123,6 +128,14 @@ def searchCharacter():
     if request.method == 'POST':
         data = request.get_json()
         character = data.get('query')
+        
+        chars = Character.query.filter_by(name=character)
+        for char in chars:
+            print(char.name, char.level, char.strength)
+        
+        print(current_user)
+
+    
     
         queryList = [character]
 
