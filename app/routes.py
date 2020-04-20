@@ -1,7 +1,14 @@
-from app import app
+from app import app, db
 from flask import render_template, request, jsonify, redirect, url_for, flash
-from app.forms import SignUpForm, CreateCharacterForm, LoginForm
+from app.forms import RegistrationForm, CreateCharacterForm, LoginForm
 import sqlite3, requests
+from flask_login import current_user, login_user, logout_user, login_required
+from app.models import User, Character
+from werkzeug.urls import url_parse
+
+# Landing page is login
+# When someone logs in, take them to an index page that displays their characters
+# Make create character only accessible from the index page
 
 # =======================================================
 # === Config Functions === #
@@ -26,18 +33,55 @@ def after_request(response):
 # Landing page - login to account to use rpg character generator
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        flash('Login requests for user {}, remember_me=[]'.format(
-            form.username.data, form.remember_me.data
-        ))
+    # If user already logged in, redirect them to create character
+    if current_user.is_authenticated:
         return redirect(url_for('createCharacter'))
+    
+    form = LoginForm()
+    # Instantiate the form if submitted, query database for the username submitted
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        # If username doesnt exist or password is incorrect, refresh page. 
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        #  If username and password cored, register user as logged in.
+        # In future pages that user navigates to, curent_user variable is set to the user
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('createCharacter')
+        return redirect(next_page)
     return render_template('login.html', form=form, title="Sign In")
+
+@app.route('/logout')
+def logout():
+    # User Flask_Logins logout_user() function to remove user from session
+    logout_user()
+    return redirect(url_for('login'))
+
+# =======================================================
+
+# Sign up for an account
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('createCharacter'))
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('signup.html', title='Sign up', form=form)
 
 # =======================================================
 
 # Create a character and store it in the database
 @app.route('/create', methods=['GET', 'POST'])
+@login_required
 def createCharacter():
     # Instantiate form
     form = CreateCharacterForm()
@@ -74,6 +118,7 @@ def createCharacter():
 
 # Search for a character in the database
 @app.route('/search', methods=['GET','POST'])
+@login_required
 def searchCharacter():
     if request.method == 'POST':
         data = request.get_json()
@@ -93,14 +138,3 @@ def searchCharacter():
             return "That character does not exist"
     return render_template('search.html', title="Search Character")
 
-# =======================================================
-
-# Sign up for an account
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    form = SignUpForm()
-    if form.is_submitted():
-        result = request.form
-        email = result.get('email')
-        return render_template('login.html', res=result)
-    return render_template('signup.html', form=form)

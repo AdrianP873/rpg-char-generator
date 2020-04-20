@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-
-
 {% block content %}
 <div class="createCharTable">
     <form action="" method="post">
@@ -21,12 +19,16 @@
     </table>
     {{ form.createCharacter() }}
     </form>
-
 </div>
     <br><br>
-
-
-
+    {% if current_user.is_authenticated %}
+        {{ current_user.username }}
+        {% for char in current_user.characters %}
+            {{ char.name }}
+            {{ char.vocation }}
+            {{ char.level }}
+        {% endfor %}
+    {% endif %}
 {% endblock %}
           
 

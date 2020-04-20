@@ -1,11 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p> 
-    {% if res is defined %}
-        <h4>Account created. Click here to <a href="/">login.</a></h4>
-    {% endif %}
-    </p>
+
 {% if form is defined %}
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
@@ -23,7 +19,7 @@
             <span style="color: red; font-style: italic;">{{ error }}</span>
             {% endfor %}
         </p>
-        <p> {{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>
             {{ form.submit() }}
         </p>
