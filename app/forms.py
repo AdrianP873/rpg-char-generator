@@ -25,9 +25,19 @@ class CreateCharacterForm(FlaskForm):
     characterClass = RadioField('Label', choices=[('Knight', 'Knight'), ('Sorcerer','Sorcerer')])
     createCharacter = SubmitField('Create character')
 
-
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField("Login")
+
+class SearchForm(FlaskForm):
+    characterName = StringField('Character Name')
+    submit = SubmitField('Search')
+
+    def validate_character(self, characterName):
+        char = Character.query.filter_by(name=characterName.data).first()
+        if char is None:
+            raise ValidationError('That character does not exist')
+
+

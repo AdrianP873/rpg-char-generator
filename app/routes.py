@@ -1,6 +1,6 @@
 from app import app, db
 from flask import render_template, request, jsonify, redirect, url_for, flash
-from app.forms import RegistrationForm, CreateCharacterForm, LoginForm
+from app.forms import RegistrationForm, CreateCharacterForm, LoginForm, SearchForm
 import sqlite3, requests
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Character
@@ -125,29 +125,11 @@ def createCharacter():
 @app.route('/search', methods=['GET','POST'])
 @login_required
 def searchCharacter():
-    if request.method == 'POST':
-        data = request.get_json()
-        character = data.get('query')
-        
-        chars = Character.query.filter_by(name=character)
-        for char in chars:
-            print(char.name, char.level, char.strength)
-        
-        print(current_user)
-
-    
-    
-        queryList = [character]
-
-        conn = sqlite3.connect('rpg.db')
-        conn.row_factory = dict_factory
-        cur =  conn.cursor()
-    
-        char = cur.execute('SELECT * FROM Characters WHERE Name = ? ;', queryList).fetchone()
+    form = SearchForm()
+    if form.is_submitted():
+        char = Character.query.filter_by(name=form.characterName.data).first()
 
         if char != None:
-            return render_template('character.html', char=char, title=char.get('Name'))
-        else:
-            return "That character does not exist"
-    return render_template('search.html', title="Search Character")
+            return render_template('character.html', char=char)
+    return render_template('search.html', title="Search Character", form=form)
 

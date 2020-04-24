@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <script src="static/search.js"></script>
-    <p>
-        Search character: <input id="searchChar">
-        <button id="searchCharBtn">Search</button>  
-    </p>
+  <form action="" method="post">
+      {{ form.hidden_tag() }}
+      <p>
+          Search character: {{ form.characterName(size=30) }} {{ form.submit }}
+          {% for error in form.characterName.errors %}
+          <span style="color: red; font-style: italic;">{{ error }}</span>
+          {% endfor %}
+      </p>
+ 
+    
+  </form>
+
+
 {% endblock %}
 
