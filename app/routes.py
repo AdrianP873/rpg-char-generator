@@ -6,19 +6,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Character
 from werkzeug.urls import url_parse
 
-# Landing page is login
-# When someone logs in, take them to an index page that displays their characters
-# Make create character only accessible from the index page
-
 # =======================================================
-# === Config Functions === #
-
-# Function to convert database cursor objects into a dictionary
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
 
 # Prevent caching during development
 @app.after_request
@@ -40,9 +28,7 @@ def home():
             return render_template('home.html', title='Home', chars=chars)
         return render_template('home.html', title='Home')
 
-
 # ======================================================= 
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
