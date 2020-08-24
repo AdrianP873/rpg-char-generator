@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  variables:
+    REPOSITORY_URI: 095079082731.dkr.ecr.ap-southeast2.amazonaws.com/rpg
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+  pre_build:
+    commands:
+      - echo "Build started at `date`"
+      - echo "Logging in to ECR..."
+      - $(aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI )
+  build:
+    commands:
+      - echo 'Building new docker image..'
+      - docker build -t $REPOSITORY_URI:latest .
+  post_build:
+    commands:
+      - echo "Build completed at `data`"
+      - Pushing new image to ECR.
+      - docker push $REPOSITORY_URI:latest
