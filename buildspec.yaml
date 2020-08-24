@@ -18,6 +18,6 @@ phases:
       - docker build -t $REPOSITORY_URI:latest .
   post_build:
     commands:
-      - echo "Build completed at `data`"
+      - echo "Build completed at `date`"
       - Pushing new image to ECR.
       - docker push $REPOSITORY_URI:latest
