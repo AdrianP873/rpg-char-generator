@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    REPOSITORY_URI: 095079082731.dkr.ecr.ap-southeast2.amazonaws.com/rpg
+    REPOSITORY_URI: $AWS_ACCOUNT_ID.dkr.ecr.ap-southeast2.amazonaws.com/rpg
 phases:
   install:
     runtime-versions:
