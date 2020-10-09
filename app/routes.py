@@ -8,9 +8,9 @@ from werkzeug.urls import url_parse
 
 # =======================================================
 
-@app.route('/hello')
+@app.route('/banana')
 def hello():
-    return "hello world"
+    return "banana"
 
 # Prevent caching during development
 @app.after_request
