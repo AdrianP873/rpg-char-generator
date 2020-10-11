@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if chars is defined %}
+    <div class="charTable">
+        <table>
+            <tr>
+                <th>Characters</th>
+                <th></th>
+            </tr>
+            {% for char in chars %}
+            <tr>
+                <td><b>{{ char.name}}</b> <br> 
+                    Level {{ char.level }} {{ char.vocation }}
+                </td>
+                <td>   
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+{% else %}
+        <h2>You have no characters. <a href={{ url_for("createCharacter") }}>Create one now.</a></h2>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <!-- returned when character created -->
+    {% if character is defined %}
+        Character {{ character.characterName.data }} has been created.
+     {% endif %}
+
+    <!-- returned when character is searched -->
+    {% if char is defined %}
+    <div class="charTable">
+    <table>
+        <tr>
+            <th>Character Information</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{ char.name }}</td>
+        </tr>
+        <tr>
+            <td>Vocation</td>
+            <td>{{ char.vocation }}</td>
+        </tr>
+        <tr>
+            <td>Level</td>
+            <td>{{ char.level }}</td>
+        </tr>
+        <tr>
+            <td>Vigor</td>
+            <td>{{ char.vigor }}</td>
+        </tr>
+        <tr>
+            <td>Endurance</td>
+            <td>{{ char.endurance }}</td>
+        </tr>
+        <tr>
+            <td>Strength</td>
+            <td>{{ char.strength }}</td>
+        </tr>
+        <tr>
+            <td>Intelligence</td>
+            <td>{{ char.intelligence }}</td>
+        </tr>
+    </table>
+    </div>
+    {% endif %}
+{% endblock %}
