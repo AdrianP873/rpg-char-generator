@@ -8,7 +8,7 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
 # Copy application files to the container working directory
-COPY . ./
+COPY ./application ./
 
 EXPOSE 5000
 
