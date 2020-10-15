@@ -1,10 +1,17 @@
+"""
+This module instantiates an instance of flask and SQLalchemy
+database, integrates the applications configuration, and
+implements AWS X-Ray middleware.
+"""
+
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
-from config import Config
 from flask import Flask
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+
+from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)

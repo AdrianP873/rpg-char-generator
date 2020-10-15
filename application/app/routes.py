@@ -1,47 +1,52 @@
-from app import app, db
-from app.forms import (CreateCharacterForm, LoginForm, RegistrationForm,
-                       SearchForm)
-from app.models import Character, User
+"""
+The routes.py file defines URLs in the application which
+map to python functions.
+"""
+
+
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
 
-# =======================================================
+from app import app, db
+from app.forms import (CreateCharacterForm, LoginForm, RegistrationForm,
+                       SearchForm)
+from app.models import Character, User
 
 
 @app.route("/banana")
 def hello():
+    """ Test String """
     return "banana"
 
 
-# Prevent caching during development
 @app.after_request
 def after_request(response):
+    """ This function prevents caching during development """
     response.headers["Cache-Control"] = "no-store"
     response.headers["Expires"] = "0"
     response.headers["Pragma"] = "no-cache"
     return response
 
 
-# Landing page - login to account to use rpg character generator
 @app.route("/")
 def home():
+    """ The home function renders  the homepage when landing on /.
+    If not logged in, the user will be routed to the login page. """
     if current_user.is_anonymous:
         return redirect(url_for("login"))
-    else:
-        chars = Character.query.filter_by(owner=current_user).first()
-        if chars is not None:
-            chars = Character.query.filter_by(owner=current_user)
-            return render_template("home.html", title="Home", chars=chars)
-        return render_template("home.html", title="Home")
 
-
-# =======================================================
+    chars = Character.query.filter_by(owner=current_user).first()
+    if chars is None:
+        return None
+    chars = Character.query.filter_by(owner=current_user)
+    return render_template("home.html", title="Home", chars=chars)
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    # If user already logged in, redirect them to create character
+    """ The login function renders the login page. If user is already
+    logged in they are redirected to the create character page. """
     if current_user.is_authenticated:
         return redirect(url_for("createCharacter"))
 
@@ -65,16 +70,17 @@ def login():
 
 @app.route("/logout")
 def logout():
-    # User Flask_Logins logout_user() function to remove user from session
+    """ The logout function removes user from their session and
+    redirects user to the login page. """
     logout_user()
     return redirect(url_for("login"))
 
 
-# =======================================================
-
-# Sign up for an account
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    """ The signup function registers users with the application. GET requests
+    to /signup will render the signup form. Submission of the form will send a
+    POST to /signup and add form data to database. """
     if current_user.is_authenticated:
         return redirect(url_for("createCharacter"))
     form = RegistrationForm()
@@ -88,13 +94,11 @@ def signup():
     return render_template("signup.html", title="Sign up", form=form)
 
 
-# =======================================================
-
-# Create a character and store it in the database
 @app.route("/create", methods=["GET", "POST"])
 @login_required
-def createCharacter():
-    # Instantiate form
+def create_character():
+    """ Renders the create character page. Submission of the character
+    form adds form data to database and associates with user. """
 
     form = CreateCharacterForm()
     if form.is_submitted():
@@ -124,12 +128,10 @@ def createCharacter():
     )
 
 
-# =======================================================
-
-# Search for a character in the database
 @app.route("/search", methods=["GET", "POST"])
 @login_required
-def searchCharacter():
+def search_character():
+    """ Provides a search function to lookup existing characters """
     form = SearchForm()
     if form.is_submitted():
         char = Character.query.filter_by(name=form.characterName.data).first()

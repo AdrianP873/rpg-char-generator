@@ -1,23 +1,23 @@
+"""
+Defines the database models.
+"""
+
 from datetime import datetime
 
-from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
-# to update the database schema you have to:
-# 1. Generate the migration script: flask db migrate -m "optional comment"
-# 2. Run the migration script: flask db upgrade
-# 3. You can revert a change or go to older version with: flask db downgrade
+from app import db, login
 
 
-# The @login.user_loader decorater registers the user loader with Flask_Login
 @login.user_loader
 def load_user(id):
+    """ Registers user with Flask_Login """
     return User.query.get(int(id))
 
 
-# Inherit from the UserMixin for user login
 class User(UserMixin, db.Model):
+    """ User class. Inherits UserMixin for user login. """
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
@@ -26,16 +26,20 @@ class User(UserMixin, db.Model):
 
     # Tell python how to print objects of the User class
     def __repr__(self):
+        """ Defines how User class objects should be printed """
         return "<User {}>".format(self.username)
 
     def set_password(self, password):
+        """ Generates a password hash. """
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
+        """ Checks that passwords match. """
         return check_password_hash(self.password_hash, password)
 
 
 class Character(db.Model):
+    """ Character model containing information about the character. """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
     vocation = db.Column(db.String(32))
@@ -48,4 +52,5 @@ class Character(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     def __repr__(self):
+        """ Defines how Character class objects should be printed """
         return "<Character {}>".format(self.name)
