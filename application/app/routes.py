@@ -38,7 +38,7 @@ def home():
 
     chars = Character.query.filter_by(owner=current_user).first()
     if chars is None:
-        return None
+        return render_template("home.html", title="Home")
     chars = Character.query.filter_by(owner=current_user)
     return render_template("home.html", title="Home", chars=chars)
 
